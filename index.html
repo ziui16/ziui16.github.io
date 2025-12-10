@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Name Dance 6 AI Ultimate</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <style>
+    :root{
+      --c1:#7fb7ff; --c2:#7fd9c2; --c3:#b59bff; --c4:#96e6a1; --c5:#a3b9ff; --c6:#7fe1f3; --c7:#c5b9ff;
+      --fg:#263042; --bd:rgba(0,0,0,.06);
+      --card-bg: linear-gradient(160deg,#ffffff,#f4f9ff);
+      --panel-bg: linear-gradient(145deg,#ffffff,#f4f9ff);
+      --soft-bg: linear-gradient(135deg,#ffffff,#f5fbff);
+      --slot-bg: linear-gradient(135deg,#ffffff,#f3f6ff);
+      --display-bg: linear-gradient(135deg,#eef5ff,#ecfff8);
+      --btn-primary-from:#6aa9ff; --btn-primary-to:#a08cff;
+      --btn-warm-from:#66e6cc; --btn-warm-to:#7fb7ff;
+      --btn-info-from:#7fe1f3; --btn-info-to:#b59bff;
+      --btn-plain-from:#d1e7ff; --btn-plain-to:#dfefff;
+      --btn-danger-from:#ff8fab; --btn-danger-to:#b487ff;
+      --btn-soft-from:#9fe6d9; --btn-soft-to:#c5b9ff;
+      --btn-fg:#23314a;
+      --text:#263042;
+      --muted:#4b5870;
+      --name-font-size: 2.4rem;
+      --button-font-size: 1.0rem;
+      --title-font-size: 1.7rem;
+      --sub-font-size: .95rem;
+      --radius: 16px;
+      --shadow: 0 20px 60px rgba(30,50,80,.25);
+      --inset: inset 0 0 0 1px rgba(255,255,255,.4);
+      --winners-panel-h: 120px; 
+    }
+    .theme-candy{
+      --c1:#ffd1dc; --c2:#c5b9ff; --c3:#9fe6d9; --c4:#ffe7a1; --c5:#a3b9ff; --c6:#7fe1f3; --c7:#c5b9ff;
+      --fg:#243145; --text:#243145; --muted:#4b5870; --bd:rgba(0,0,0,.08);
+      --card-bg: linear-gradient(160deg,#ffffff,#fbfdff);
+      --panel-bg: linear-gradient(145deg,#ffffff,#fbfdff);
+      --soft-bg: linear-gradient(135deg,#ffffff,#fbfdff);
+      --slot-bg: linear-gradient(135deg,#ffffff,#f8fbff);
+      --display-bg: linear-gradient(135deg,#fff7f9,#f7fffb);
+      --shadow: 0 20px 60px rgba(90,120,160,.22);
+      --inset: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+    .theme-white{
+      --c1:#ffffff; --c2:#ffffff; --c3:#ffffff; --c4:#ffffff; --c5:#ffffff; --c6:#ffffff; --c7:#ffffff;
+      --fg:#1f2937; --text:#1f2937; --muted:#6b7280; --bd:rgba(0,0,0,.08);
+      --card-bg:#ffffff; --panel-bg:#ffffff; --soft-bg:#ffffff; --slot-bg:#ffffff; --display-bg:#ffffff;
+      --shadow: 0 12px 32px rgba(0,0,0,.08);
+      --inset: inset 0 0 0 1px rgba(0,0,0,.05);
+    }
+    .theme-zen{
+      --c1:#f5f5f7; --c2:#f5f5f7; --c3:#f5f5f7; --c4:#f5f5f7; --c5:#f5f5f7; --c6:#f5f5f7; --c7:#f5f5f7;
+      --fg:#1d1d1f; --text:#1d1d1f; --muted:#86868b; --bd:#d2d2d7;
+      --card-bg:#ffffff; --panel-bg:#f5f5f7; --soft-bg:#ffffff; --slot-bg:#ffffff; --display-bg:#fbfbfd;
+      --btn-primary-from:#0071e3; --btn-primary-to:#0077ed;
+      --btn-warm-from:#6e6e73; --btn-warm-to:#1d1d1f;
+      --btn-info-from:#e8e8ed; --btn-info-to:#d2d2d7; 
+      --btn-plain-from:#f5f5f7; --btn-plain-to:#e8e8ed;
+      --shadow: 0 8px 30px rgba(0,0,0,0.08);
+      --inset: none;
+      --radius: 12px;
+      --name-font-size: 2.2rem;
+    }
+    .theme-zen header h1 { background: none; -webkit-text-fill-color: #1d1d1f; color: #1d1d1f; font-weight: 700; }
+    .theme-zen .btn-info { color: #1d1d1f; }
+    .theme-zen body { animation: none !important; background: #f5f5f7; }
+    .theme-zen .name-slot { border: 1px solid #d2d2d7; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .theme-zen .winner { border-color: #0071e3; box-shadow: 0 4px 20px rgba(0,113,227,0.25); }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family: ui-sans-serif,system-ui,-apple-system,"Noto Sans SC","Segoe UI",Roboto,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c6), var(--c4), var(--c5), var(--c7));
+      background-size: 360% 360%;
+      display:flex; align-items:center; justify-content:center; padding:20px;
+      animation: none;
+      /* 性能优化：平滑字体 */
+      -webkit-font-smoothing: antialiased;
+    }
+    .container{
+      width: min(1080px, 96vw);
+      background: var(--card-bg);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px; 
+      display:flex; flex-direction:column; gap:14px;
+      animation: in .45s ease both;
+      backdrop-filter: blur(6px);
+      /* 性能优化：层级合成 */
+      will-change: transform, opacity;
+    }
+    @keyframes in{from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none}}
+    header h1{
+      margin: 0 0 4px;
+      font-size: var(--title-font-size);
+      font-weight: 900;
+      letter-spacing: .3px;
+      background: linear-gradient(90deg, #6aa9ff, #66e6cc, #b487ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p{ margin:0; color: var(--muted); font-size: var(--sub-font-size); }
+    .panel{ background: var(--panel-bg); border: 1px solid var(--bd); border-radius: 14px; padding: 12px; }
+    .top-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+    .display-area{
+      display:flex; flex-wrap:wrap; gap:14px; justify-content:center; align-items:center; min-height:160px;
+      background: var(--display-bg);
+      border:1px solid var(--bd); border-radius: 14px; padding: 18px; box-shadow: var(--inset);
+    }
+    .name-slot{
+      background: var(--slot-bg);
+      border:2px solid rgba(140,170,255,.55);
+      border-radius: 14px;
+      padding: 16px 22px;
+      font-size: var(--name-font-size);
+      font-weight: 900; color: var(--text);
+      min-width: 180px; text-align: center;
+      box-shadow: 0 14px 28px rgba(90,120,160,.18);
+      transition: transform .18s cubic-bezier(.2,.9,.3,1), filter .12s ease;
+      will-change: transform, filter; /* 性能优化 */
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      user-select: none;
+    }
+    .name-slot.animate{transform: scale(1.035)}
+    .name-slot.obscured{ filter: blur(16px) !important; }
+    .name-slot.winner{
+      border-color: transparent;
+      background: radial-gradient(ellipse at top, rgba(255,255,255,.98), rgba(255,255,255,.7));
+      box-shadow: 0 16px 36px rgba(64,128,255,.24);
+      animation: pulse .7s ease both;
+      filter: none !important;
+    }
+    @keyframes pulse{0%{transform: scale(.96)}50%{transform: scale(1.05)}100%{transform: scale(1)}}
+    .controls{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center}
+    .btn{
+      border:none; cursor:pointer; color:#fff; font-weight:800; letter-spacing:.2px; padding:10px 14px; border-radius:10px;
+      box-shadow:0 10px 22px rgba(60,90,140,.22);
+      transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s ease, opacity .2s ease, filter .18s ease;
+      font-size: var(--button-font-size);
+      will-change: transform, box-shadow;
+      backface-visibility: hidden;
+    }
+    .theme-zen .btn { box-shadow: none; }
+    .btn:hover{ transform: translateY(-1px) scale(1.02); }
+    .btn:active{ transform: translateY(0.5px) scale(0.98); box-shadow:0 8px 18px rgba(60,90,140,.2); filter: brightness(0.98); }
+    .btn-primary{background:linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to))}
+    .btn-warm{background:linear-gradient(135deg, var(--btn-warm-from), var(--btn-warm-to))}
+    .btn-info{background:linear-gradient(135deg, var(--btn-info-from), var(--btn-info-to)); color:#23314a}
+    .btn-plain{background:linear-gradient(135deg, var(--btn-plain-from), var(--btn-plain-to)); color:#23314a}
+    .btn-danger{background:linear-gradient(135deg, var(--btn-danger-from), var(--btn-danger-to))}
+    .btn-soft{background:linear-gradient(135deg, var(--btn-soft-from), var(--btn-soft-to)); color:#23314a}
+    .count-wrap{display:flex; align-items:center; gap:10px}
+    .count-btn{
+      width:48px; height:48px; border-radius:12px; font-size:1.6rem; font-weight:900;
+      display:flex; align-items:center; justify-content:center; box-shadow:0 10px 22px rgba(60,90,140,.22);
+      border:none; cursor:pointer; color:#23314a; background:linear-gradient(135deg, var(--btn-plain-from), var(--btn-plain-to));
+      transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s ease;
+      backface-visibility: hidden;
+    }
+    .theme-zen .count-btn { box-shadow: none; border: 1px solid var(--bd); background: #fff; }
+    .count-btn:hover{ transform: translateY(-1px) scale(1.02); }
+    .count-btn:active{ transform: translateY(0.5px) scale(0.98); box-shadow:0 8px 18px rgba(60,90,140,.2); }
+    .count-display{
+      width:96px; height:48px; text-align:center; font-size:1.4rem; font-weight:900; border-radius:12px;
+      border:1px solid var(--bd); background:var(--soft-bg); display:flex; align-items:center; justify-content:center; color:var(--text);
+    }
+    .theme-zen .count-display { background: #fff; }
+
+    .modal{display:none; position:fixed; inset:0; z-index:50; background:rgba(30,40,60,.38); justify-content:center; align-items:center; animation:fade .2s ease}
+    @keyframes fade{from{opacity:0}to{opacity:1}}
+    
+    .dialog{
+      width: min(900px, 94vw); 
+      max-height: 86vh; 
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border:1px solid var(--bd); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); animation:pop .2s cubic-bezier(.2,.9,.3,1)
+    }
+    #advanced-modal .dialog{max-height: calc(86vh + 50px);}
+    @keyframes pop{from{opacity:0; transform:translateY(12px)}to{opacity:1; transform:none}}
+    
+    .dialog h3{margin:0 0 12px; font-size:1.12rem; color:var(--text); flex-shrink: 0;}
+    .dialog .content-scroll { 
+        overflow-y: auto; flex: 1; min-height: 0; 
+        /* 性能优化：内容可见性，不在视口时不渲染 */
+        content-visibility: auto; 
+        contain-intrinsic-size: 500px;
+    }
+    
+    .subtitle{color:var(--muted); margin:4px 0 10px; font-size:.92rem}
+    .subtitle a{color:var(--text); font-weight:800; text-decoration: underline; text-decoration-color: rgba(110,150,255,.6);}
+
+    .chart-container{
+      height: 360px; margin-top: 4px; margin-bottom: 12px; position: relative; overflow: hidden; z-index: 0;
+    }
+    .chart-container .scroll-x{
+      height: 100%; overflow-x: auto; overflow-y: hidden; padding-bottom: 8px; position: relative;
+    }
+    .stats-note, #stats-actions{ position: relative; z-index: 1; }
+    canvas{display:block !important; width:100% !important; height:100% !important}
+
+    .prob-list{display:grid; grid-template-columns: repeat( auto-fit, minmax(220px, 1fr) ); gap:8px; margin-top:8px; content-visibility: auto; contain-intrinsic-size: 300px;}
+    .prob-item{display:flex; gap:8px; align-items:center; background:var(--panel-bg); border:1px solid var(--bd); border-radius:10px; padding:8px}
+    .prob-bar{height:8px; border-radius:6px; background:linear-gradient(90deg,#6aa9ff,#66e6cc,#b59bff)}
+    .scroll-x{overflow:auto; padding-bottom:8px}
+    #fx-layer{pointer-events:none; position: fixed; inset:0; z-index:40}
+    .chips{display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:8px; margin-top:8px; content-visibility: auto; contain-intrinsic-size: 200px;}
+    .chip{
+      user-select:none; cursor:pointer; padding:8px 10px; border:1px solid var(--bd); border-radius:10px;
+      background:var(--soft-bg); color:var(--text);
+      transition:transform .08s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .chip.selected{border-color: rgba(140,170,255,.8); box-shadow: 0 6px 16px rgba(90,120,160,.15)}
+    .theme-zen .chip.selected { border-color: #0071e3; background: #f0f7ff; box-shadow: none; }
+    .chip:hover{transform: translateY(-1px)}
+    .class-tag{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--bd); border-radius:999px; background:var(--panel-bg); margin:4px 6px 0 0;
+    }
+    .class-tag button{background:transparent; border:none; cursor:pointer; color:#b00; font-weight:800}
+
+    .winners-panel{
+      padding:12px;
+      display:flex; flex-direction:column;
+      height: var(--winners-panel-h);
+      transition: height 0.3s ease;
+    }
+    .winners-header{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom: 6px;}
+    .winners-table{
+      flex:1 1 auto; min-height:0;
+      overflow-y:auto; overflow-x: hidden;
+      border:1px solid var(--bd); border-radius:12px; background:var(--soft-bg);
+      padding:8px;
+    }
+    .winners-table::-webkit-scrollbar { width: 6px; }
+    .winners-table::-webkit-scrollbar-track { background: transparent; }
+    .winners-table::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.1); border-radius: 4px; }
+    .winners-list{
+        display:flex; flex-wrap:wrap; gap:6px; align-content: flex-start;
+    }
+    .winner-chip{
+      padding:4px 12px; border:1px solid rgba(100,140,255,0.2); border-radius:999px;
+      background:linear-gradient(135deg,#e6f0ff,#f0f7ff); color:#1e3a8a; 
+      font-weight:700; font-size:.9rem;
+      box-shadow:0 2px 5px rgba(60,90,140,.06);
+      white-space:nowrap;
+      animation: chip-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      will-change: transform, opacity;
+    }
+    @keyframes chip-pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    details.settings{
+      border:1px solid var(--bd); border-radius:12px; padding:8px; background:var(--panel-bg); margin-bottom:10px;
+    }
+    details.settings > summary{
+      cursor:pointer; font-weight:800; color:var(--text);
+    }
+    details.settings .content{ margin-top:8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .history-item{
+      display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px; border:1px solid var(--bd); border-radius:10px; margin-bottom:8px; background:var(--slot-bg);
+      /* 性能优化：历史记录项 */
+      contain: content;
+    }
+    .history-meta{color:var(--muted); font-size:.9rem}
+    .history-del{border:none; background:linear-gradient(135deg, var(--btn-danger-from), var(--btn-danger-to)); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:800}
+
+    #history-main-view {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+    #history-list {
+      flex: 1; 
+      overflow-y: auto;
+      margin: 10px 0;
+      padding-right: 4px;
+      border: 1px solid transparent; 
+      /* 性能优化：长列表虚拟化辅助 */
+      content-visibility: auto;
+      contain-intrinsic-size: 80px 1000px; 
+    }
+    .history-footer {
+        flex-shrink: 0;
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--bd);
+        display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+
+    #history-analysis-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      background: var(--soft-bg);
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid var(--bd);
+      overflow: hidden;
+    }
+    .analysis-content { flex: 1; overflow-y: auto; }
+    .analysis-card {
+      background: #fff;
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .rank-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--bd); font-size: 0.95rem; }
+    .rank-row:last-child { border-bottom: none; }
+
+    .sticky-actions{
+      position: sticky; bottom: 0;
+      background: var(--card-bg);
+      border-top:1px solid var(--bd);
+      padding-top:8px; margin-top:8px;
+    }
+
+    .dialog select,
+    .dialog input[type="text"],
+    .dialog input[type="number"]{
+      appearance:none; -moz-appearance:none; -webkit-appearance:none;
+      background: var(--soft-bg);
+      border:1px solid var(--bd);
+      border-radius:12px;
+      padding:8px 12px;
+      color:var(--text);
+      box-shadow: var(--inset), 0 6px 14px rgba(60,90,140,.12);
+      font-weight:700;
+      min-width:140px;
+      transition:border-color .12s ease, box-shadow .12s ease;
+    }
+    .dialog select{
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3e%3cpath fill='%234b5870' d='M2 2l5 5 5-5'/%3e%3c/svg%3e");
+      background-repeat:no-repeat;
+      background-position: calc(100% - 12px) 50%;
+      background-size: 12px;
+      padding-right: 38px;
+      cursor: pointer;
+    }
+    .dialog select:focus,
+    .dialog input[type="text"]:focus,
+    .dialog input[type="number"]:focus{
+      outline:none;
+      border-color: rgba(140,170,255,.8);
+      box-shadow: 0 8px 18px rgba(90,120,160,.18);
+    }
+    .dialog .field{
+      display:flex; flex-direction:column; gap:4px;
+      color:var(--muted); font-weight:700;
+    }
+    .dialog .field input{width:min(340px, 100%);}
+
+    @media (max-width:640px){
+      :root{ --name-font-size: 1.8rem; --button-font-size: .95rem; --title-font-size: 1.4rem }
+      .name-slot{min-width: 150px; padding: 14px 18px}
+      .count-btn{width:48px; height:48px; font-size:1.4rem}
+      .count-display{height:48px; width:90px; font-size:1.2rem}
+      .chart-container{ height: 300px }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .name-slot{transition:none}
+      .name-slot.animate{transform:none}
+      body{animation:none}
+    }
+
+    @keyframes bg-move{0%{background-position:0% 50%}50%{background-position:80% 50%}100%{background-position:0% 50%}}
+  </style>
+</head>
+<body>
+  <div class="container" role="application" aria-label="点名系统">
+    <header>
+      <h1>Name Dance 6 AI Ultimate</h1>
+      <p id="status">加载中...</p>
+      <p id="group-label" style="margin-top:4px; color:var(--muted); font-size:.9rem">当前分组：未选择</p>
+    </header>
+
+    <section class="panel top-actions">
+      <button class="btn btn-plain" id="open-advanced">⚙️ 妙控中心</button>
+      <button class="btn btn-plain" id="open-stats">📊 概率统计</button>
+      <button class="btn btn-plain" id="open-history">📜 历史记录</button>
+    </section>
+
+    <div class="display-area" id="display-slots" aria-live="polite"></div>
+
+    <section class="panel">
+      <div class="controls" id="main-controls" style="justify-content:center;">
+        <div class="count-wrap" id="count-wrap" aria-label="选取人数">
+          <button class="count-btn" id="count-dec" title="减少人数">−</button>
+          <div class="count-display" id="count-display" title="本次抽取人数">1</div>
+          <button class="count-btn" id="count-inc" title="增加人数">＋</button>
+        </div>
+        <button class="btn btn-primary" id="start-button">▶️ 开始点名</button>
+        <button class="btn btn-warm" id="stop-button" style="display:none;">就决定是他们了！</button>
+        <button class="btn btn-info" id="reset-button" style="display:none;">🔄 重置名单</button>
+      </div>
+    </section>
+
+    <section class="panel winners-panel">
+      <div class="winners-header">
+        <strong style="color:var(--text)">本轮幸运儿 (已累计)</strong>
+        <span id="winners-count" style="font-size:0.85rem; color:var(--muted)">0 人</span>
+      </div>
+      <div class="winners-table">
+        <div class="winners-list" id="winners-list"></div>
+      </div>
+    </section>
+  </div>
+
+  <canvas id="fx-layer"></canvas>
+
+  <div class="modal" id="advanced-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog">
+      <h3>⚙️ 妙控中心</h3>
+      <p class="subtitle">本<a href="https://ziui16.github.io" target="_blank" rel="noopener noreferrer">开源项目</a>由ZIUI、GPT-5、GPT-5.1-Codex-Max、Gemini-3.0-Pro开发</p>
+
+      <div class="content-scroll">
+        <details class="settings">
+            <summary>🗂️ 名单与范围</summary>
+            <div class="content">
+            <button class="btn btn-info" id="open-range">🗂️ 自定义范围</button>
+            <label title="每次进入程序时，自动将“可用名单”重置为完整名单">
+                <input type="checkbox" id="auto-reset-toggle"/> 每次进入时自动重置名单
+            </label>
+            </div>
+        </details>
+
+        <details class="settings">
+            <summary>📈 权重与概率</summary>
+            <div class="content">
+            <label>🪪：
+                <select id="name-select"></select>
+            </label>
+            <label>权重：
+                <input type="number" id="weight-input" min="1" value="1" style="width:86px;">
+            </label>
+            <button class="btn btn-primary" id="set-weight-btn">设置权重</button>
+            <button class="btn btn-soft" id="reset-all-weights">重置权重 = 1</button>
+            <button class="btn btn-soft" id="reset-prob-btn" title="将所有人的抽取次数等效归一，使概率回归平均">重置即时概率</button>
+            </div>
+        </details>
+
+        <details class="settings">
+            <summary>🌈 外观与特效</summary>
+            <div class="content">
+            <label>📊 概率展示方式</label>
+            <select id="stats-mode">
+                <option value="auto">自动</option>
+                <option value="chart">图表</option>
+                <option value="list">列表</option>
+            </select>
+            <label>⏱️ 滚动速度</label>
+            <select id="roll-speed">
+                <option value="fast">快</option>
+                <option value="normal" selected>中</option>
+                <option value="slow">慢</option>
+            </select>
+            <label>🎨 主题</label>
+            <select id="theme-select" title="选择纯白后将禁用背景动态">
+                <option value="default">默认梦幻（蓝绿紫）</option>
+                <option value="candy">梦幻糖果</option>
+                <option value="white">纯白主题</option>
+                <option value="zen">禅意·白 (Zen White)</option>
+            </select>
+            <label>✨ 特效</label>
+            <select id="fx-select">
+                <option value="none">无特效</option>
+                <option value="confetti">彩带</option>
+                <option value="fireworks">焰火</option>
+                <option value="sparkles">火花</option>
+                <option value="mixed">随机混合</option>
+            </select>
+            <label title="为进一步降低GPU占用，可临时开启或关闭背景动画">
+                <input type="checkbox" id="bg-animate-toggle"/>
+                🌌 背景动态
+            </label>
+            </div>
+        </details>
+
+        <details class="settings">
+            <summary>🤖 AI算法</summary>
+            <div class="content">
+            <button class="btn btn-primary" id="open-ai">🤖 打开AI算法控制台</button>
+            </div>
+        </details>
+      </div>
+
+      <div style="text-align:right; margin-top:10px; border-top:1px solid var(--bd); padding-top:10px;">
+        <button class="btn btn-plain" id="close-advanced">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="stats-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog">
+      <h3>📊 概率统计（即时）</h3>
+      <div class="content-scroll">
+        <div id="stats-chart-wrap" class="chart-container" style="display:none;">
+            <div class="scroll-x">
+            <canvas id="probChart"></canvas>
+            </div>
+        </div>
+        <div id="stats-list-wrap" style="display:none;">
+            <div class="prob-list" id="prob-list"></div>
+        </div>
+        <p class="stats-note" style="color:var(--muted); font-size:.92rem; margin-top:10px;">
+            说明：概率= 适配权重 / 所有成员的适配权重总和；适配权重会根据“个人抽取次数/总抽取次数”自动调整，抑制频繁出现。历史记录（包括导入）将参与算法计算。
+        </p>
+      </div>
+      <div id="stats-actions" style="text-align:right; margin-top:10px; border-top:1px solid var(--bd); padding-top:10px;">
+        <button class="btn btn-plain" id="close-stats">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="history-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog">
+      <h3>📜 历史记录（所有时间）</h3>
+      
+      <div id="history-main-view">
+        <div class="panel" style="flex-shrink:0; margin-bottom:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+            <span style="font-weight:700; color:var(--muted); margin-right:4px;">数据操作：</span>
+            <button class="btn btn-info" id="export-csv-btn">📤 导出 CSV</button>
+            <button class="btn btn-warm" id="import-csv-btn">📥 导入 CSV</button>
+            <button class="btn btn-primary" id="open-analysis-btn">📊 历史分析</button>
+            <input type="file" id="import-file-input" style="display:none" accept=".csv,.json">
+        </div>
+
+        <div id="history-list"></div>
+        
+        <div class="history-footer">
+          <button class="btn btn-danger" id="clear-history">🧹 清空历史</button>
+          <button class="btn btn-plain" id="close-history">🚪 关闭</button>
+        </div>
+      </div>
+
+      <div id="history-analysis-view">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-shrink:0;">
+          <h4 style="margin:0;">📊 数据洞察</h4>
+          <button class="btn btn-plain" id="back-history-btn">🔙 返回列表</button>
+        </div>
+        
+        <div class="analysis-content">
+            <div class="analysis-card">
+            <strong>🏆 幸运儿排行榜 (Top 10)</strong>
+            <div id="analysis-top-list" style="margin-top:8px;"></div>
+            </div>
+
+            <div class="analysis-card">
+            <strong>📅 历史概览</strong>
+            <div style="margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>总抽取次数：<span id="analysis-total-draws" style="font-weight:800; color:var(--btn-primary-to)">0</span></div>
+                <div>总记录条数：<span id="analysis-total-records" style="font-weight:800; color:var(--btn-warm-to)">0</span></div>
+            </div>
+            </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal" id="range-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog">
+      <h3>🧭 自定义范围</h3>
+      <div class="content-scroll">
+        <div class="panel" style="margin-bottom:10px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div class="field">
+                <span>📄 文件名</span>
+                <input id="range-file-input" type="text" placeholder="例如：清北班.js">
+            </div>
+            <button class="btn btn-primary" id="range-add-class">加载班级文件</button>
+            <button class="btn btn-soft" id="range-clear-classes">清空已加载</button>
+            <span style="color:var(--muted)">说明：请输入与本HTML同文件夹的JS文件名。</span>
+            </div>
+            <div id="loaded-classes" style="margin-top:8px;">
+            <strong>已加载班级：</strong>
+            <span id="class-tags">无</span>
+            </div>
+        </div>
+        <div class="panel" style="margin-bottom:10px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <strong>👥 学生选择</strong>
+            <button class="btn btn-info" id="select-all">全选</button>
+            <button class="btn btn-info" id="select-none">全不选</button>
+            <button class="btn btn-info" id="select-invert">反选</button>
+            <div class="field">
+                <span>筛选</span>
+                <input id="filter-input" type="text" placeholder="输入姓名关键字">
+            </div>
+            <span id="sel-count" style="color:var(--muted)">已选：0 人</span>
+            </div>
+            <div id="student-grid" class="chips"></div>
+        </div>
+      </div>
+      <div class="sticky-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-shrink:0;">
+        <span style="color:var(--muted)">将会替换当前分组并重置“可用名单”进度。</span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-warm" id="apply-range">📥 应用范围</button>
+          <button class="btn btn-plain" id="close-range">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="ai-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog">
+      <h3>🤖 AI算法控制台</h3>
+      <div class="content-scroll">
+        <div class="panel" style="margin-bottom:10px;">
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="ai-shuffle-toggle" />
+                🔀 预洗牌
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="ai-jitter-toggle" />
+                🎲 抽样抖动
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="ai-fair-toggle" />
+                ⚖️ 公平抑制
+            </label>
+            </div>
+        </div>
+        <div class="panel" style="margin-bottom:10px;">
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <label style="display:flex; align-items:center; gap:8px;">
+                🌡️ 模型温度
+                <input type="range" id="ai-temp" min="0.4" max="2.0" step="0.1" value="1.0" style="width:220px;">
+                <span id="ai-temp-label">1.0</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+                🎛️ 抖动强度
+                <input type="range" id="ai-jitter-amt" min="0" max="0.4" step="0.02" value="0.12" style="width:220px;">
+                <span id="ai-jitter-label">0.12</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+                ⚖️ 公平强度
+                <input type="range" id="ai-fair-k" min="0" max="1" step="0.05" value="0.5" style="width:220px;">
+                <span id="ai-fair-label">0.50</span>
+            </label>
+            </div>
+        </div>
+      </div>
+      <div style="text-align:right; margin-top:10px; border-top:1px solid var(--bd); padding-top:10px;">
+        <button class="btn btn-plain" id="close-ai">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LS_KEY = {
+      weights: 'nd6_weights',
+      stats: 'nd6_stats',
+      history: 'nd6_history',
+      available: 'nd6_available',
+      theme: 'nd6_theme',
+      fx: 'nd6_fx',
+      group: 'nd6_group',
+      groupStudents: 'nd6_groupStudents',
+      statsMode: 'nd6_statsMode',
+      rollSpeed: 'nd6_rollSpeed',
+      bgAnim: 'nd6_bgAnim',
+      rangeMemory: 'nd6_rangeMemory',
+      rangeSelected: 'nd6_rangeSelected',
+      autoReset: 'nd6_autoReset',
+      aiConfig: 'nd6_aiConfig',
+      roundOrder: 'nd6_roundOrder'
+    };
+
+    let allNames = [];
+    let availableNames = [];
+    let weights = {};
+    let stats = {};
+    let history = []; 
+    let roundOrder = [];
+    
+    // 性能优化：缓存计算的基准权重
+    let cachedBaseWeights = null;
+
+    let aiConfig = { shuffle: true, jitter: true, jitterAmt: 0.12, fair: true, fairK: 0.5, temperature: 1.0 };
+
+    let currentPreview = [];
+    let rafId = null;
+    let rolling = false;
+
+    let currentGroupName = localStorage.getItem(LS_KEY.group) || '未选择';
+    let currentTheme = localStorage.getItem(LS_KEY.theme) || 'default';
+    let currentFX = localStorage.getItem(LS_KEY.fx) || 'none';
+    let statsModePref = localStorage.getItem(LS_KEY.statsMode) || 'auto';
+    let rollSpeed = localStorage.getItem(LS_KEY.rollSpeed) || 'normal';
+    let bgAnimate = localStorage.getItem(LS_KEY.bgAnim) === '1';
+    let autoResetOnEnter = localStorage.getItem(LS_KEY.autoReset) === '1';
+
+    const displaySlotsEl = document.getElementById('display-slots');
+    const startBtn = document.getElementById('start-button');
+    const stopBtn = document.getElementById('stop-button');
+    const resetBtn = document.getElementById('reset-button');
+    const statusEl = document.getElementById('status');
+    const countDecBtn = document.getElementById('count-dec');
+    const countIncBtn = document.getElementById('count-inc');
+    const countDisplayEl = document.getElementById('count-display');
+    const countWrap = document.getElementById('count-wrap');
+    let countValue = 1;
+
+    const groupLabel = document.getElementById('group-label');
+
+    const advModal = document.getElementById('advanced-modal');
+    const statsModal = document.getElementById('stats-modal');
+    const historyModal = document.getElementById('history-modal');
+
+    const nameSelect = document.getElementById('name-select');
+    const weightInput = document.getElementById('weight-input');
+    const setWeightBtn = document.getElementById('set-weight-btn');
+
+    const historyListEl = document.getElementById('history-list');
+
+    const resetAllWeightsBtn = document.getElementById('reset-all-weights');
+    const resetProbBtn = document.getElementById('reset-prob-btn');
+
+    const themeSelect = document.getElementById('theme-select');
+    const fxSelect = document.getElementById('fx-select');
+    const statsModeEl = document.getElementById('stats-mode');
+    const rollSpeedEl = document.getElementById('roll-speed');
+    const bgAnimToggle = document.getElementById('bg-animate-toggle');
+    const autoResetToggle = document.getElementById('auto-reset-toggle');
+
+    const openRangeBtn = document.getElementById('open-range');
+
+    const statsChartWrap = document.getElementById('stats-chart-wrap');
+    const statsListWrap = document.getElementById('stats-list-wrap');
+    const probListEl = document.getElementById('prob-list');
+
+    const fxCanvas = document.getElementById('fx-layer');
+    const fxCtx = fxCanvas.getContext('2d', { alpha: true });
+    let fxActive = false;
+    let fxObjects = [];
+    let fxRaf = null;
+
+    const rangeModal = document.getElementById('range-modal');
+    const rangeFileInput = document.getElementById('range-file-input');
+    const rangeAddBtn = document.getElementById('range-add-class');
+    const rangeClearBtn = document.getElementById('range-clear-classes');
+    const classTags = document.getElementById('class-tags');
+    const studentGrid = document.getElementById('student-grid');
+    const selectAllBtn = document.getElementById('select-all');
+    const selectNoneBtn = document.getElementById('select-none');
+    const selectInvertBtn = document.getElementById('select-invert');
+    const filterInput = document.getElementById('filter-input');
+    const selCountEl = document.getElementById('sel-count');
+    const applyRangeBtn = document.getElementById('apply-range');
+    const closeRangeBtn = document.getElementById('close-range');
+
+    const winnersListEl = document.getElementById('winners-list');
+    const winnersCountEl = document.getElementById('winners-count');
+
+    const aiModal = document.getElementById('ai-modal');
+    const openAiBtn = document.getElementById('open-ai');
+    const closeAiBtn = document.getElementById('close-ai');
+    const aiShuffleToggle = document.getElementById('ai-shuffle-toggle');
+    const aiJitterToggle = document.getElementById('ai-jitter-toggle');
+    const aiFairToggle = document.getElementById('ai-fair-toggle');
+    const aiTempRange = document.getElementById('ai-temp');
+    const aiTempLabel = document.getElementById('ai-temp-label');
+    const aiJitterRange = document.getElementById('ai-jitter-amt');
+    const aiJitterLabel = document.getElementById('ai-jitter-label');
+    const aiFairKRange = document.getElementById('ai-fair-k');
+    const aiFairKLabel = document.getElementById('ai-fair-label');
+
+    const exportCsvBtn = document.getElementById('export-csv-btn');
+    const importCsvBtn = document.getElementById('import-csv-btn');
+    const importFileInput = document.getElementById('import-file-input');
+
+    const historyMainView = document.getElementById('history-main-view');
+    const historyAnalysisView = document.getElementById('history-analysis-view');
+    const openAnalysisBtn = document.getElementById('open-analysis-btn');
+    const backHistoryBtn = document.getElementById('back-history-btn');
+    const analysisTopList = document.getElementById('analysis-top-list');
+    const analysisTotalDraws = document.getElementById('analysis-total-draws');
+    const analysisTotalRecords = document.getElementById('analysis-total-records');
+
+    let loadedClasses = [];
+    let selectedStudents = new Set();
+    
+    // 性能优化：防抖保存
+    let saveTimeout = null;
+
+    const setCountWrapVisible = (visible)=>{ countWrap.style.display = visible ? 'flex' : 'none'; };
+
+    function saveAllDeferred(){
+        if(saveTimeout) clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveAll, 500);
+    }
+
+    function saveAll(){
+      localStorage.setItem(LS_KEY.weights, JSON.stringify(weights));
+      localStorage.setItem(LS_KEY.stats, JSON.stringify(stats));
+      localStorage.setItem(LS_KEY.history, JSON.stringify(history));
+      localStorage.setItem(LS_KEY.available, JSON.stringify(availableNames));
+      localStorage.setItem(LS_KEY.groupStudents, JSON.stringify(allNames));
+      localStorage.setItem(LS_KEY.theme, currentTheme);
+      localStorage.setItem(LS_KEY.fx, currentFX);
+      localStorage.setItem(LS_KEY.group, currentGroupName);
+      localStorage.setItem(LS_KEY.statsMode, statsModePref);
+      localStorage.setItem(LS_KEY.rollSpeed, rollSpeed);
+      localStorage.setItem(LS_KEY.bgAnim, bgAnimate ? '1' : '0');
+      localStorage.setItem(LS_KEY.autoReset, autoResetOnEnter ? '1' : '0');
+      localStorage.setItem(LS_KEY.aiConfig, JSON.stringify(aiConfig));
+      localStorage.setItem(LS_KEY.roundOrder, JSON.stringify(roundOrder));
+    }
+    function loadAll(){
+      try{
+        const w = JSON.parse(localStorage.getItem(LS_KEY.weights) || '{}');
+        const s = JSON.parse(localStorage.getItem(LS_KEY.stats) || '{}');
+        const h = JSON.parse(localStorage.getItem(LS_KEY.history) || '[]');
+        const av = JSON.parse(localStorage.getItem(LS_KEY.available) || 'null');
+        const gs = JSON.parse(localStorage.getItem(LS_KEY.groupStudents) || 'null');
+        const rm = JSON.parse(localStorage.getItem(LS_KEY.rangeMemory) || 'null');
+        const rs = JSON.parse(localStorage.getItem(LS_KEY.rangeSelected) || 'null');
+        const ac = JSON.parse(localStorage.getItem(LS_KEY.aiConfig) || 'null');
+        const ro = JSON.parse(localStorage.getItem(LS_KEY.roundOrder) || '[]');
+
+        weights = w || {};
+        stats = s || {};
+        history = Array.isArray(h) ? h : [];
+        roundOrder = Array.isArray(ro) ? ro.map(x=>String(x)) : [];
+
+        allNames = Array.isArray(gs) ? gs : [];
+        availableNames = Array.isArray(av) ? av : (Array.isArray(gs) ? [...gs] : []);
+
+        loadedClasses = Array.isArray(rm) ? rm.map(c=>({ name: String(c.name||'未命名'), students: Array.isArray(c.students)? c.students.map(x=>String(x)) : [], file: c.file || undefined })) : [];
+        selectedStudents = new Set(Array.isArray(rs) ? rs.map(x=>String(x)) : []);
+        if(ac && typeof ac === 'object'){ aiConfig = Object.assign({}, aiConfig, ac); }
+      }catch(e){
+        console.warn('读取本地存储失败，已使用默认值', e);
+        allNames = []; availableNames = []; loadedClasses = []; selectedStudents = new Set();
+      }
+    }
+    function saveRangeMemory(){
+      localStorage.setItem(LS_KEY.rangeMemory, JSON.stringify(loadedClasses));
+      localStorage.setItem(LS_KEY.rangeSelected, JSON.stringify(Array.from(selectedStudents)));
+    }
+
+    function populateSelects(){
+      const frag = document.createDocumentFragment();
+      allNames.forEach(n=>{
+        const o=document.createElement('option'); o.value=n; o.textContent=n; frag.appendChild(o);
+      });
+      nameSelect.innerHTML='';
+      nameSelect.appendChild(frag);
+      syncSelectedWeight();
+    }
+    function syncSelectedWeight(){ weightInput.value = weights[nameSelect.value] || 1; }
+
+    function clearWinnersUI(){
+      winnersListEl.innerHTML = '';
+      winnersCountEl.textContent = '0 人';
+    }
+    function renderRoundWinners(){
+      clearWinnersUI();
+      const frag = document.createDocumentFragment();
+      roundOrder.forEach(n=>{
+        const chip = document.createElement('span');
+        chip.className = 'winner-chip';
+        chip.textContent = n;
+        frag.appendChild(chip);
+      });
+      winnersListEl.appendChild(frag);
+      winnersCountEl.textContent = `${roundOrder.length} 人`;
+    }
+    function recordRoundWinners(newNames){
+      const validNew = newNames.filter(n => !roundOrder.includes(n));
+      if(validNew.length > 0) { roundOrder = [...validNew, ...roundOrder]; }
+    }
+
+    function updateStatus(){
+      const poolCount = availableNames.length;
+      const total = allNames.length;
+      const rollingTxt = rolling ? '正在点名中… ' : '待点名。';
+      statusEl.textContent = `${rollingTxt} 可选：${poolCount} / ${total}`;
+      groupLabel.textContent = `当前分组：${currentGroupName}`;
+      
+      if(!rolling){
+        resetBtn.style.display = (total > 0 && poolCount < total) ? 'inline-block' : 'none';
+      }
+      
+      const max = Math.max(1, poolCount || 1);
+      if(countValue > max) countValue = max;
+      countDisplayEl.textContent = String(countValue);
+    }
+
+    function totalDraws(){ return Object.values(stats).reduce((a,b)=>a+b,0); }
+    
+    // 性能优化：在StartRolling时预先计算好所有权重
+    function getAdaptiveWeight(name){
+      const base = Math.max(1, parseInt(weights[name]||1));
+      const draws = stats[name] || 0;
+      const tot = totalDraws();
+      const fairK = aiConfig.fair ? aiConfig.fairK : 0;
+      const smooth = 1 + fairK * (tot > 0 ? (draws / Math.max(1, tot)) : 0);
+      const adjusted = base / smooth;
+      const T = Math.max(0.4, Math.min(2.0, aiConfig.temperature));
+      return Math.pow(adjusted, T);
+    }
+    function computeCurrentProbabilities(){
+      const pool = availableNames.slice();
+      const entries = pool.map(n=>({ name:n, w:getAdaptiveWeight(n) }));
+      const sum = entries.reduce((s,e)=>s+e.w,0);
+      const probs = {};
+      entries.forEach(e=>{ probs[e.name] = sum>0 ? e.w/sum : 0; });
+      return probs;
+    }
+    
+    // 性能优化：动画循环中使用的快速挑选函数，利用缓存的权重
+    function weightedRandomPickFast(pool, count){
+      const result = [];
+      let candidates = [...pool];
+
+      // Shuffle logic (Fisher-Yates) - 保持洗牌逻辑
+      if(aiConfig.shuffle){
+        for(let i=candidates.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+        }
+      }
+
+      const jitterAmt = aiConfig.jitter ? aiConfig.jitterAmt : 0;
+      
+      // 使用缓存的基准权重，只进行简单的 jitter 计算
+      const useWeights = cachedBaseWeights || {};
+
+      for(let k=0;k<count && candidates.length>0;k++){
+        // 抖动计算：在基准权重上加随机浮动
+        const jittered = candidates.map(n=>{
+            const w = (useWeights[n] || 1); 
+            return { n, w: w * (1 + (Math.random()-0.5)*jitterAmt) };
+        });
+
+        const rot = Math.floor(Math.random()*jittered.length);
+        const arr = jittered.slice(rot).concat(jittered.slice(0,rot));
+        const total = arr.reduce((s,i)=>s+i.w,0);
+        
+        let r = Math.random()*total, chosenIndex=-1;
+        for(let i=0;i<arr.length;i++){ r -= arr[i].w; if(r<=0){ chosenIndex=i; break; } }
+        if(chosenIndex<0) chosenIndex=arr.length-1;
+        
+        const chosen = arr[chosenIndex].n;
+        result.push(chosen);
+        
+        const idx = candidates.indexOf(chosen);
+        if(idx>-1) candidates.splice(idx,1);
+      }
+      return result;
+    }
+
+    let probChartInstance = null;
+    async function ensureChart(){
+      if(window.Chart) return;
+      await new Promise((resolve,reject)=>{
+        const s=document.createElement('script');
+        s.src="https://cdn.jsdelivr.net/npm/chart.js";
+        s.onload=resolve; s.onerror=reject;
+        document.head.appendChild(s);
+      });
+    }
+    function destroyChart(){
+      if(probChartInstance){ try{probChartInstance.destroy();}catch(e){} probChartInstance=null; }
+    }
+    function renderProbabilityChart(){
+      const labels = allNames.slice();
+      const probs = computeCurrentProbabilities();
+      const values = labels.map(n => +(probs[n]||0)*100);
+      const colors = labels.map((_,i)=>{
+        const pal = ['#6aa9ff','#66e6cc','#b487ff','#7fe1f3','#9cc6ff','#8adfca','#c5b9ff'];
+        return pal[i % pal.length];
+      });
+      const canvas = document.getElementById('probChart').getContext('2d');
+      destroyChart();
+      probChartInstance = new Chart(canvas, {
+        type:'bar',
+        data:{ labels, datasets:[{ label:'单次抽取概率（%）', data: values, backgroundColor: colors, borderRadius: 6 }] },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          animation:{ duration: 280, easing: 'easeOutCubic' },
+          scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>v+'%' } }, x:{ ticks:{ autoSkip: false, maxRotation: 45, minRotation: 0 } } },
+          plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(ctx)=>`${(ctx.raw||0).toFixed(2)}%` } } }
+        }
+      });
+    }
+    function renderProbabilityList(){
+      probListEl.innerHTML='';
+      const probs = computeCurrentProbabilities();
+      const pairs = allNames.map(n=>({name:n, p:(probs[n]||0)}));
+      pairs.sort((a,b)=>b.p-a.p);
+      const pmax = Math.max(0, ...pairs.map(x=>x.p));
+      const frag = document.createDocumentFragment();
+      pairs.forEach(({name,p})=>{
+        const item = document.createElement('div');
+        item.className='prob-item';
+        const pctAbs = (p*100);
+        const rel = pmax > 0 ? (p/pmax*100) : 0;
+        item.innerHTML = `
+          <div style="min-width:68px; font-weight:700">${name}</div>
+          <div style="flex:1;">
+            <div class="prob-bar" style="width:${Math.max(2, rel)}%"></div>
+          </div>
+          <div style="min-width:64px; text-align:right; color:var(--muted)">${pctAbs.toFixed(2)}%</div>
+        `;
+        frag.appendChild(item);
+      });
+      probListEl.appendChild(frag);
+    }
+    function openStats(){
+      const N = allNames.length;
+      const mode = statsModePref === 'auto' ? (N > 30 ? 'list' : 'chart') : statsModePref;
+      if(mode === 'chart'){
+        statsListWrap.style.display='none';
+        statsChartWrap.style.display='block';
+        ensureChart().then(()=>{ renderProbabilityChart(); });
+      }else{
+        destroyChart();
+        statsChartWrap.style.display='none';
+        statsListWrap.style.display='block';
+        renderProbabilityList();
+      }
+    }
+
+    function formatTimestamp(ts){
+      let d;
+      if(ts instanceof Date){ d = ts; }
+      else {
+        d = new Date(ts);
+        if(isNaN(d)) return String(ts);
+      }
+      const y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+      const hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0'), ss=String(d.getSeconds()).padStart(2,'0');
+      return `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')} ${hh}:${mm}:${ss}`;
+    }
+
+    function recomputeStatsFromHistory(){
+      const counts = {};
+      history.forEach(item=>{
+        const names = Array.isArray(item.result) ? item.result : (item.result ? String(item.result).split('|') : [item.name]);
+        names.filter(Boolean).forEach(n=>{
+          counts[n] = (counts[n]||0) + 1;
+        });
+      });
+      allNames.forEach(n=>{ stats[n] = counts[n] || 0; });
+      saveAllDeferred();
+    }
+
+    function populateHistory(){
+      historyListEl.innerHTML='';
+      const entries = history.slice().reverse();
+      const frag = document.createDocumentFragment();
+      entries.forEach((r, idx)=>{
+        const wrap = document.createElement('div');
+        wrap.className = 'history-item';
+        // 使用 content-visibility 后无需过度担心 DOM 数量，但仍需高效构建
+        if(r && (Array.isArray(r.result) || typeof r.result === 'string')){
+          const resArr = Array.isArray(r.result) ? r.result : String(r.result).split('|').filter(Boolean);
+          const group = r.group || '未记录';
+          const meta = `${formatTimestamp(r.timestamp)} · 范围人数 ${Number(r.rangeCount||0)} · 抽取人数 ${Number(r.drawCount||resArr.length)}`;
+          wrap.innerHTML = `
+            <div>
+              <div style="font-weight:800">${group}：${resArr.join(' | ')}</div>
+              <div class="history-meta">${meta}</div>
+            </div>
+            <button class="history-del">🗑️ 删除</button>
+          `;
+        }else{
+          wrap.innerHTML = `
+            <div>
+              <div style="font-weight:800">${r.name}</div>
+              <div class="history-meta">${r.timestamp}</div>
+            </div>
+            <button class="history-del">🗑️ 删除</button>
+          `;
+        }
+        const delBtn = wrap.querySelector('.history-del');
+        delBtn.addEventListener('click', ()=>{
+          const realIndex = history.length - 1 - idx;
+          if(realIndex >= 0){
+            history.splice(realIndex, 1);
+            recomputeStatsFromHistory();
+            saveAllDeferred();
+            populateHistory(); // 重新渲染列表
+          }
+        });
+        frag.appendChild(wrap);
+      });
+      if(!entries.length){
+        const empty = document.createElement('div');
+        empty.className='history-item';
+        empty.innerHTML = `<div style="color:var(--muted)">暂无历史</div>`;
+        frag.appendChild(empty);
+      }
+      historyListEl.appendChild(frag);
+    }
+    function clearHistory(){
+      if(!history.length){ alert('当前无历史记录'); return; }
+      if(!confirm('确认清空全部历史记录？')) return;
+      history=[]; recomputeStatsFromHistory(); saveAll(); populateHistory(); alert('历史记录已清空');
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+      const a = document.createElement('a');
+      mimeType = mimeType || 'application/octet-stream';
+      const url = URL.createObjectURL(new Blob([content], { type: mimeType }));
+      a.href = url; a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
+    }
+
+    function exportHistoryCSV() {
+      const records = history;
+      if (!records.length) { alert('没有历史记录可导出'); return; }
+      const bom = '\uFEFF';
+      const headers = '"时间","范围","范围人数","抽取人数","结果"\n';
+      const rows = records.map(rec=>{
+        const resArr = Array.isArray(rec.result) ? rec.result : (rec.result ? String(rec.result).split('|') : [rec.name]);
+        const resStr = resArr.filter(Boolean).join('|');
+        const safe = v => String(v).replace(/"/g, '""');
+        const ts = formatTimestamp(rec.timestamp);
+        return `"${safe(ts)}","${safe(rec.group||'未记录')}","${Number(rec.rangeCount||0)}","${Number(rec.drawCount||resArr.length)}","${safe(resStr)}"`;
+      }).join('\n');
+      const csvContent = bom + headers + rows;
+      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
+      downloadFile(csvContent, `NameDance6_Ultimate5_${timestamp}.csv`, 'text/csv;charset=utf-8');
+    }
+
+    function handleFileImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        try {
+          const newRecords = [];
+          const lines = content.split(/\r\n|\n/);
+          const parseCSVLine = (line) => {
+            const res = [];
+            let inQuote = false;
+            let field = '';
+            for(let i=0; i<line.length; i++){
+              let char = line[i];
+              if(char === '"'){
+                if(i+1 < line.length && line[i+1] === '"'){
+                   field += '"'; i++;
+                } else {
+                   inQuote = !inQuote;
+                }
+              } else if(char === ',' && !inQuote){
+                res.push(field); field = '';
+              } else {
+                field += char;
+              }
+            }
+            res.push(field);
+            return res;
+          };
+
+          for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+            if (!line) continue;
+            let parts = parseCSVLine(line);
+            
+            if(i===0 && parts[0].includes('时间')) continue;
+
+            if(parts.length >= 5){
+              const ts = parts[0];
+              const group = parts[1];
+              const rangeCount = Number(parts[2]||0);
+              const drawCount = Number(parts[3]||0);
+              const resultField = parts[4];
+              const resArr = resultField.split('|').filter(Boolean);
+              newRecords.push({ timestamp: ts, group, rangeCount, drawCount: drawCount || resArr.length, result: resArr });
+            }
+          }
+
+          if (newRecords.length > 0) {
+            history = [...history, ...newRecords];
+            recomputeStatsFromHistory();
+            saveAll();
+            populateHistory();
+            alert(`成功导入 ${newRecords.length} 条记录`);
+          } else {
+            alert('未能在文件中找到有效的历史记录数据');
+          }
+        } catch (err) {
+          alert('导入失败：文件格式错误或损坏');
+          console.error(err);
+        }
+        importFileInput.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    exportCsvBtn.addEventListener('click', exportHistoryCSV);
+    importCsvBtn.addEventListener('click', () => { importFileInput.accept = '.csv'; importFileInput.click(); });
+    importFileInput.addEventListener('change', handleFileImport);
+
+    function renderAnalysis(){
+       const total = history.reduce((sum, item) => {
+          const arr = Array.isArray(item.result) ? item.result : (item.result ? String(item.result).split('|') : [item.name]);
+          return sum + arr.length;
+       }, 0);
+       analysisTotalDraws.textContent = total;
+       analysisTotalRecords.textContent = history.length;
+
+       const counts = {};
+       history.forEach(item => {
+          const arr = Array.isArray(item.result) ? item.result : (item.result ? String(item.result).split('|') : [item.name]);
+          arr.filter(Boolean).forEach(n => counts[n] = (counts[n]||0) + 1);
+       });
+       const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+       
+       analysisTopList.innerHTML = '';
+       if(sorted.length === 0){
+         analysisTopList.innerHTML = '<div style="color:var(--muted)">暂无数据</div>';
+       } else {
+         const frag = document.createDocumentFragment();
+         sorted.forEach((entry, idx) => {
+           const row = document.createElement('div');
+           row.className = 'rank-row';
+           row.innerHTML = `
+             <span><span style="font-weight:800; color:var(--btn-primary-to); margin-right:8px;">#${idx+1}</span> ${entry[0]}</span>
+             <span style="font-weight:700;">${entry[1]}次</span>
+           `;
+           frag.appendChild(row);
+         });
+         analysisTopList.appendChild(frag);
+       }
+    }
+
+    openAnalysisBtn.addEventListener('click', ()=>{
+      historyMainView.style.display = 'none';
+      historyAnalysisView.style.display = 'flex';
+      renderAnalysis();
+    });
+    backHistoryBtn.addEventListener('click', ()=>{
+      historyAnalysisView.style.display = 'none';
+      historyMainView.style.display = 'flex';
+    });
+
+    function getIntervalFromSpeed(){
+      return rollSpeed === 'fast' ? 18 : (rollSpeed === 'slow' ? 60 : 30);
+    }
+
+    let slotNodes = [];
+    function ensureSlotNodes(count){
+      if(slotNodes.length === count && displaySlotsEl.children.length === count) return;
+      displaySlotsEl.innerHTML='';
+      slotNodes = [];
+      const frag = document.createDocumentFragment();
+      for(let i=0;i<count;i++){
+        const div = document.createElement('div');
+        div.className='name-slot animate obscured';
+        div.textContent='…';
+        frag.appendChild(div);
+        slotNodes.push(div);
+      }
+      displaySlotsEl.appendChild(frag);
+    }
+
+    function startRolling(){
+      const pool = availableNames.slice();
+      const count = Math.min(parseInt(countValue)||1, pool.length);
+      if(pool.length===0 || count<=0){ alert('没有可用的名字或人数无效'); return; }
+
+      // 性能优化：在开始时一次性计算好所有人的基准权重（含温度与公平系数）
+      // 避免在 tick 循环中重复访问 stats 和 weights 对象
+      cachedBaseWeights = {};
+      pool.forEach(n => {
+          cachedBaseWeights[n] = getAdaptiveWeight(n);
+      });
+
+      countWrap.style.display = 'none';
+      resetBtn.style.display = 'none';
+
+      startBtn.style.display = 'none';
+      stopBtn.style.display='inline-block';
+      rolling = true;
+
+      ensureSlotNodes(count);
+      slotNodes.forEach(n => {
+        n.classList.remove('winner');
+        n.classList.add('obscured');
+      });
+
+      let last = 0;
+      const interval = getIntervalFromSpeed();
+
+      const tick = (t)=>{
+        if(!rafId) return;
+        if(t - last > interval){
+          // 使用优化后的快速挑选函数
+          currentPreview = weightedRandomPickFast(pool, count);
+          for(let i=0;i<slotNodes.length;i++){
+            slotNodes[i].textContent = currentPreview[i] || '';
+          }
+          last = t;
+        }
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+      updateStatus();
+    }
+
+    function stopRolling(){
+      // 性能优化关键：优先处理视觉反馈，将数据写入推迟
+      if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+      rolling = false;
+
+      // 1. 立即更新界面：移除模糊，标记中奖者 (Critical Rendering Path)
+      Array.from(displaySlotsEl.children).forEach(el=>{
+        el.classList.remove('obscured');
+        el.classList.add('winner');
+      });
+
+      // 2. 立即触发特效
+      triggerFX();
+      
+      startBtn.style.display='inline-block';
+      stopBtn.style.display='none';
+      countWrap.style.display = 'flex';
+
+      // 3. 延迟处理数据逻辑，避免阻塞动画 (Non-Critical)
+      requestAnimationFrame(() => {
+          setTimeout(() => {
+              const timestamp = new Date();
+              
+              // 更新内存状态
+              currentPreview.forEach(name=>{
+                availableNames = availableNames.filter(n=>n!==name);
+                stats[name] = (stats[name]||0)+1;
+              });
+
+              history.push({
+                timestamp,
+                group: currentGroupName || '未记录',
+                rangeCount: allNames.length || 0,
+                drawCount: currentPreview.length,
+                result: currentPreview.slice()
+              });
+
+              recordRoundWinners(currentPreview);
+              renderRoundWinners();
+
+              saveAll(); // 即使这里稍慢也不影响视觉了
+              updateStatus();
+              
+              cachedBaseWeights = null; // 清理缓存
+          }, 0);
+      });
+    }
+
+    function resetList(){
+      availableNames=[...allNames];
+      roundOrder=[];
+      currentPreview=[]; 
+      displaySlotsEl.innerHTML='';
+      renderRoundWinners();
+      saveAll(); updateStatus();
+      resetBtn.style.display='none';
+      countWrap.style.display = 'flex';
+    }
+
+    function setWeight(){
+      const name=nameSelect.value;
+      const w=Math.max(1, parseInt(weightInput.value)||1);
+      weights[name]=w; saveAll(); alert(`${name} 的权重已设置为 ${w}`);
+    }
+    function resetAllWeights(){
+      if(!confirm('确认将所有权重重置为 1？')) return;
+      allNames.forEach(n=>weights[n]=1); saveAll(); syncSelectedWeight(); alert('已重置所有权重为 1');
+    }
+    function resetProbability(){
+      if(!confirm('确认将概率重置为平均值（不清空历史，仅影响即时概率计算）？')) return;
+      const avg = Math.floor(totalDraws()/Math.max(1, allNames.length || 1));
+      allNames.forEach(n=>{ stats[n] = avg; });
+      saveAll();
+      alert('概率已重置为平均值');
+    }
+
+    function applyTheme(theme){
+      document.body.classList.remove('theme-candy','theme-white','theme-zen');
+      if(theme === 'candy') document.body.classList.add('theme-candy');
+      if(theme === 'white') document.body.classList.add('theme-white');
+      if(theme === 'zen') document.body.classList.add('theme-zen');
+      applyBgAnimateFlag();
+    }
+    function applyBgAnimateFlag(){
+      const isSimple = currentTheme === 'zen' || currentTheme === 'white';
+      bgAnimToggle.disabled = isSimple;
+      if(isSimple){
+        bgAnimate = false;
+        document.body.style.animation = 'none';
+        document.body.style.background = currentTheme === 'white' ? '#ffffff' : '#f5f5f7';
+      }else{
+        document.body.style.background = 'linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c6), var(--c4), var(--c5), var(--c7))';
+        document.body.style.backgroundSize = '360% 360%';
+        document.body.style.animation = bgAnimate ? 'bg-move 26s ease infinite' : 'none';
+      }
+    }
+
+    function resizeFX(){
+      const dpr = Math.min(1.25, window.devicePixelRatio || 1);
+      if(fxCanvas.width !== Math.floor(window.innerWidth * dpr)) {
+        fxCanvas.width = Math.floor(window.innerWidth * dpr);
+        fxCanvas.height = Math.floor(window.innerHeight * dpr);
+        fxCtx.setTransform(dpr,0,0,dpr,0,0);
+      }
+    }
+    window.addEventListener('resize', resizeFX);
+
+    function startFXLoop(){
+      if(fxActive) return;
+      fxActive = true;
+      const step = ()=>{
+        if(!fxActive) return;
+        fxCtx.clearRect(0,0,fxCanvas.width, fxCanvas.height);
+        const now = performance.now();
+        // 性能优化：反向循环删除数组元素更安全，或使用 filter
+        fxObjects = fxObjects.filter(o=>now < o.deadline);
+        fxObjects.forEach(o=>o.draw(now));
+        if(fxObjects.length > 0) {
+            fxRaf = requestAnimationFrame(step);
+        } else {
+            fxActive = false;
+        }
+      };
+      fxRaf = requestAnimationFrame(step);
+    }
+    function stopFXLoop(){
+      fxActive = false;
+      if(fxRaf){ cancelAnimationFrame(fxRaf); fxRaf=null; }
+      fxCtx.clearRect(0,0,fxCanvas.width, fxCanvas.height);
+      fxObjects = [];
+    }
+
+    function makeConfettiBurst(x,y,colors = ['#6aa9ff','#66e6cc','#fbbf24','#f472b6','#b59bff'], scale=1){
+      const count = Math.round(90 * Math.max(0.7, scale));
+      const now = performance.now();
+      for(let i=0;i<count;i++){
+        const angle = Math.random()*Math.PI*2;
+        const speed = (2 + Math.random()*5.5) * Math.max(0.9, scale*0.7);
+        const size = (3 + Math.random()*3) * Math.max(1, scale*0.7);
+        const life = 800 + Math.random()*500;
+        const color = colors[i%colors.length];
+        const vx = Math.cos(angle)*speed, vy = Math.sin(angle)*speed - 3.6;
+        const rot = Math.random()*Math.PI;
+        const rotSpd = (Math.random()-.5)*0.2;
+        const gravity = 0.1 + Math.random()*0.08;
+        const o = {
+          deadline: now + life,
+          draw: (t)=>{
+            const dt = (t - now)/16.6;
+            const px = x + vx*dt;
+            const py = y + vy*dt + gravity*dt*dt*0.5;
+            const alpha = Math.max(0, (o.deadline - t)/life);
+            fxCtx.save();
+            fxCtx.globalAlpha = alpha;
+            fxCtx.translate(px, py);
+            fxCtx.rotate(rot + rotSpd*dt);
+            fxCtx.fillStyle = color;
+            fxCtx.fillRect(-size/2, -size/2, size, size*1.4);
+            fxCtx.restore();
+          }
+        };
+        fxObjects.push(o);
+      }
+    }
+    function makeFirework(x,y,color = '#fff', scale=1){
+      const now = performance.now();
+      const count = Math.round(60 * Math.max(0.7, scale));
+      const baseLife = 900;
+      for(let i=0;i<count;i++){
+        const angle = Math.random()*Math.PI*2;
+        const speed = (2.6 + Math.random()*2.6) * Math.max(0.9, scale*0.75);
+        const life = baseLife + Math.random()*400;
+        const vx = Math.cos(angle)*speed;
+        const vy = Math.sin(angle)*speed;
+        const o = {
+          deadline: now + life,
+          draw: (t)=>{
+            const dt = (t - now)/16.6;
+            const px = x + vx*dt;
+            const py = y + vy*dt + 0.05*dt*dt;
+            const alpha = Math.max(0, (o.deadline - t)/life);
+            fxCtx.save();
+            fxCtx.globalAlpha = Math.pow(alpha, 1.4);
+            fxCtx.fillStyle = color;
+            fxCtx.beginPath();
+            fxCtx.arc(px, py, 2.4, 0, Math.PI*2);
+            fxCtx.fill();
+            fxCtx.restore();
+          }
+        };
+        fxObjects.push(o);
+      }
+    }
+    function makeSparkleBurst(x,y,scale=1){
+      const colors = ['#b59bff','#6aa9ff','#66e6cc','#f59e0b'];
+      makeFirework(x,y, colors[Math.floor(Math.random()*colors.length)], Math.max(0.8, scale*1.2));
+    }
+    function triggerFX(){
+      if(currentFX==='none') return;
+      resizeFX();
+      startFXLoop();
+
+      const slotRects = Array.from(displaySlotsEl.children).map(el=>el.getBoundingClientRect());
+      const multi = currentPreview.length > 1 && slotRects.length > 1;
+
+      let points = [];
+      let scale = 1;
+      if(multi){
+        const xs = slotRects.map(r=>r.left);
+        const xe = slotRects.map(r=>r.right);
+        const ys = slotRects.map(r=>r.top);
+        const ye = slotRects.map(r=>r.bottom);
+        const left = Math.min(...xs), right = Math.max(...xe);
+        const top = Math.min(...ys), bottom = Math.max(...ye);
+        const cx = (left+right)/2;
+        const cy = (top+bottom)/2;
+        points = [{x:cx, y:cy}];
+        scale = Math.min(3.0, 1.2 + currentPreview.length*0.6);
+      }else{
+        points = slotRects.length
+          ? slotRects.map(r=>({x:r.left + r.width/2, y:r.top + r.height/2}))
+          : [{ x: window.innerWidth/2, y: window.innerHeight*0.35 }];
+      }
+
+      const randPick = (arr)=>arr[Math.floor(Math.random()*arr.length)];
+      if(currentFX==='confetti'){
+        if(multi){ makeConfettiBurst(points[0].x, points[0].y, undefined, scale); }
+        else points.forEach(p=>makeConfettiBurst(p.x, p.y));
+      }else if(currentFX==='fireworks'){
+        if(multi){ makeFirework(points[0].x, points[0].y, '#fff', scale); }
+        else points.forEach(p=>makeFirework(p.x, p.y));
+      }else if(currentFX==='sparkles'){
+        if(multi){ makeSparkleBurst(points[0].x, points[0].y, scale); }
+        else points.forEach(p=>makeSparkleBurst(p.x, p.y));
+      }else if(currentFX==='mixed'){
+        const types = ['confetti','fireworks','sparkles'];
+        const t = randPick(types);
+        if(multi){
+          if(t==='confetti') makeConfettiBurst(points[0].x, points[0].y, undefined, scale);
+          else if(t==='fireworks') makeFirework(points[0].x, points[0].y, randPick(['#fff','#b59bff','#66e6cc','#6aa9ff']), scale);
+          else makeSparkleBurst(points[0].x, points[0].y, scale);
+        }else{
+          points.forEach(p=>{
+            const tt = randPick(types);
+            if(tt==='confetti') makeConfettiBurst(p.x, p.y);
+            else if(tt==='fireworks') makeFirework(p.x, p.y, randPick(['#fff','#b59bff','#66e6cc','#6aa9ff']));
+            else makeSparkleBurst(p.x, p.y);
+          });
+        }
+      }
+      if(multi && currentFX!=='none'){
+        setTimeout(()=>makeSparkleBurst(points[0].x, points[0].y, scale*1.05), 120);
+      }
+      setTimeout(()=>{ stopFXLoop(); }, 2400);
+    }
+
+    function loadClassFile(file){
+      return new Promise((resolve,reject)=>{
+        delete window.CLASS_STUDENTS;
+        delete window.CLASS_NAME;
+        const s = document.createElement('script');
+        s.src = file + '?t=' + Date.now();
+        s.async = true;
+        s.onload = ()=>{
+          const list = window.CLASS_STUDENTS;
+          const name = window.CLASS_NAME || file.replace(/\.js$/,'');
+          delete window.CLASS_STUDENTS;
+          delete window.CLASS_NAME;
+          s.remove();
+          if(!Array.isArray(list) || list.length===0){
+            reject(new Error('文件未定义有效的 CLASS_STUDENTS 数组'));
+            return;
+          }
+          resolve({ file, name, students: Array.from(new Set(list.map(x=>String(x)))) });
+        };
+        s.onerror = ()=>{
+          s.remove();
+          reject(new Error('无法加载文件（检查是否与本HTML同目录，或文件名是否正确）'));
+        };
+        document.head.appendChild(s);
+      });
+    }
+    function refreshClassTags(){
+      if(!loadedClasses.length){ classTags.textContent = '无'; return; }
+      classTags.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      loadedClasses.forEach((c,idx)=>{
+        const tag = document.createElement('span');
+        tag.className='class-tag';
+        tag.innerHTML = `<span>${c.name}（${c.students.length}）</span><button title="移除" data-idx="${idx}">×</button>`;
+        frag.appendChild(tag);
+      });
+      classTags.appendChild(frag);
+      classTags.querySelectorAll('button').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const i = parseInt(btn.dataset.idx);
+          loadedClasses.splice(i,1);
+          const union = currentUnionStudents();
+          selectedStudents = new Set(Array.from(selectedStudents).filter(s=>union.includes(s)));
+          rebuildStudentGrid();
+          refreshClassTags();
+          saveRangeMemory();
+        });
+      });
+    }
+    function currentUnionStudents(){
+      const set = new Set();
+      loadedClasses.forEach(c=>c.students.forEach(s=>set.add(s)));
+      return Array.from(set);
+    }
+    function rebuildStudentGrid(){
+      const union = currentUnionStudents();
+      const q = (filterInput.value||'').trim().toLowerCase();
+
+      if(selectedStudents.size === 0){
+        union.forEach(s=>selectedStudents.add(s));
+      }else{
+        selectedStudents = new Set(Array.from(selectedStudents).filter(s=>union.includes(s)));
+      }
+
+      studentGrid.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      union
+        .filter(s => !q || s.toLowerCase().includes(q))
+        .sort((a,b)=>a.localeCompare(b,'zh-Hans-CN'))
+        .forEach(s=>{
+          const div = document.createElement('div');
+          div.className = 'chip' + (selectedStudents.has(s) ? ' selected':'');
+          div.textContent = s;
+          div.title = '点击切换选择';
+          div.addEventListener('click', ()=>{
+            if(selectedStudents.has(s)) selectedStudents.delete(s);
+            else selectedStudents.add(s);
+            div.classList.toggle('selected');
+            updateSelCount();
+            saveRangeMemory();
+          }, { passive: true });
+          frag.appendChild(div);
+        });
+      studentGrid.appendChild(frag);
+      updateSelCount();
+    }
+    function updateSelCount(){
+      selCountEl.textContent = `已选：${selectedStudents.size} 人`;
+    }
+    function applyGroup(groupName, students){
+      currentGroupName = groupName || '自定义';
+      allNames = Array.from(new Set(students.map(s=>String(s))));
+      const newWeights={}, newStats={};
+      allNames.forEach(n=>{
+        newWeights[n] = (n in weights) ? weights[n] : 1;
+        newStats[n] = (n in stats) ? stats[n] : 0;
+      });
+      weights = newWeights;
+      stats = newStats;
+
+      availableNames = [...allNames];
+      roundOrder=[];
+      recomputeStatsFromHistory();
+      saveAll();
+      populateSelects();
+      updateStatus();
+      displaySlotsEl.innerHTML='';
+      renderRoundWinners();
+    }
+
+    document.getElementById('open-advanced').addEventListener('click', ()=>{
+      document.querySelectorAll('#advanced-modal details.settings').forEach(d=>{ d.open = true; });
+      populateSelects();
+      themeSelect.value = currentTheme;
+      fxSelect.value = currentFX;
+      statsModeEl.value = statsModePref;
+      rollSpeedEl.value = rollSpeed;
+      bgAnimToggle.checked = !!bgAnimate;
+      autoResetToggle.checked = !!autoResetOnEnter;
+      applyBgAnimateFlag();
+      toggleModal(advModal,true);
+    });
+    document.getElementById('close-advanced').addEventListener('click', ()=>toggleModal(advModal,false));
+
+    document.getElementById('open-stats').addEventListener('click', ()=>{
+      openStats();
+      toggleModal(statsModal,true);
+    });
+    document.getElementById('close-stats').addEventListener('click', ()=>{
+      destroyChart();
+      toggleModal(statsModal,false);
+    });
+
+    document.getElementById('open-history').addEventListener('click', ()=>{ 
+       populateHistory(); 
+       historyMainView.style.display = 'flex';
+       historyAnalysisView.style.display = 'none';
+       toggleModal(historyModal,true); 
+    });
+    document.getElementById('close-history').addEventListener('click', ()=>toggleModal(historyModal,false));
+
+    startBtn.addEventListener('click', startRolling);
+    stopBtn.addEventListener('click', stopRolling);
+    resetBtn.addEventListener('click', resetList);
+
+    const clampCount = ()=>{
+      const max = Math.max(1, availableNames.length || 1);
+      countValue = Math.max(1, Math.min(max, parseInt(countValue)||1));
+      countDisplayEl.textContent = String(countValue);
+    };
+    countDecBtn.addEventListener('click', ()=>{
+      countValue = Math.max(1, (parseInt(countValue)||1) - 1);
+      clampCount();
+    });
+    countIncBtn.addEventListener('click', ()=>{
+      const max = Math.max(1, availableNames.length || 1);
+      countValue = Math.min(max, (parseInt(countValue)||1) + 1);
+      clampCount();
+    });
+
+    setWeightBtn.addEventListener('click', setWeight);
+    resetAllWeightsBtn.addEventListener('click', resetAllWeights);
+    resetProbBtn.addEventListener('click', resetProbability);
+
+    document.getElementById('clear-history').addEventListener('click', clearHistory);
+
+    nameSelect.addEventListener('change', syncSelectedWeight);
+
+    themeSelect.addEventListener('change', ()=>{
+      currentTheme = themeSelect.value; applyTheme(currentTheme); saveAllDeferred();
+    });
+    fxSelect.addEventListener('change', ()=>{
+      currentFX = fxSelect.value; saveAllDeferred();
+    });
+    statsModeEl.addEventListener('change', ()=>{
+      statsModePref = statsModeEl.value; saveAllDeferred();
+    });
+    rollSpeedEl.addEventListener('change', ()=>{
+      rollSpeed = rollSpeedEl.value; saveAllDeferred();
+    });
+    bgAnimToggle.addEventListener('change', ()=>{
+      bgAnimate = !!bgAnimToggle.checked; applyBgAnimateFlag(); saveAllDeferred();
+    });
+    autoResetToggle.addEventListener('change', ()=>{
+      autoResetOnEnter = !!autoResetToggle.checked; saveAllDeferred();
+    });
+
+    openRangeBtn.addEventListener('click', ()=>{
+      toggleModal(rangeModal, true);
+      refreshClassTags();
+      rebuildStudentGrid();
+    });
+    closeRangeBtn.addEventListener('click', ()=> toggleModal(rangeModal,false));
+
+    rangeAddBtn.addEventListener('click', async ()=>{
+      const file = (rangeFileInput.value||'').trim();
+      if(!file){ alert('请输入文件名'); return; }
+      try{
+        const loaded = await loadClassFile(file);
+        loadedClasses.push(loaded);
+        loaded.students.forEach(s=>selectedStudents.add(s));
+        refreshClassTags();
+        rebuildStudentGrid();
+        saveRangeMemory();
+        alert(`已加载：${loaded.name}（${loaded.students.length} 人）`);
+      }catch(e){
+        alert('加载失败：' + e.message);
+      }
+    });
+    rangeClearBtn.addEventListener('click', ()=>{
+      loadedClasses = [];
+      selectedStudents.clear();
+      refreshClassTags();
+      rebuildStudentGrid();
+      saveRangeMemory();
+    });
+    filterInput.addEventListener('input', rebuildStudentGrid, { passive: true });
+    selectAllBtn.addEventListener('click', ()=>{
+      currentUnionStudents().forEach(s=>selectedStudents.add(s));
+      rebuildStudentGrid();
+      saveRangeMemory();
+    });
+    selectNoneBtn.addEventListener('click', ()=>{
+      selectedStudents.clear();
+      rebuildStudentGrid();
+      saveRangeMemory();
+    });
+    selectInvertBtn.addEventListener('click', ()=>{
+      const union = currentUnionStudents();
+      const next = new Set();
+      union.forEach(s=>{ if(!selectedStudents.has(s)) next.add(s); });
+      selectedStudents = next;
+      rebuildStudentGrid();
+      saveRangeMemory();
+    });
+    applyRangeBtn.addEventListener('click', ()=>{
+      const union = currentUnionStudents();
+      const sel = Array.from(selectedStudents).filter(s=>union.includes(s));
+      if(sel.length===0){ alert('请至少选择1位学生'); return; }
+      const groupName = loadedClasses.length>1
+        ? ('联合：' + loadedClasses.map(c=>c.name).join(' + '))
+        : (loadedClasses[0]?.name || '自定义');
+      applyGroup(groupName, sel);
+      saveRangeMemory();
+      toggleModal(rangeModal,false);
+      alert(`已应用范围：${groupName}（${sel.length} 人）`);
+    });
+
+    const openAi = ()=>{
+      aiShuffleToggle.checked = !!aiConfig.shuffle;
+      aiJitterToggle.checked = !!aiConfig.jitter;
+      aiFairToggle.checked   = !!aiConfig.fair;
+      aiTempRange.value      = aiConfig.temperature;
+      aiTempLabel.textContent= Number(aiConfig.temperature).toFixed(1);
+      aiJitterRange.value    = aiConfig.jitterAmt;
+      aiJitterLabel.textContent = Number(aiConfig.jitterAmt).toFixed(2);
+      aiFairKRange.value     = aiConfig.fairK;
+      aiFairKLabel.textContent = Number(aiConfig.fairK).toFixed(2);
+      toggleModal(aiModal, true);
+    };
+    openAiBtn.addEventListener('click', openAi);
+    closeAiBtn.addEventListener('click', ()=>toggleModal(aiModal,false));
+    aiShuffleToggle.addEventListener('change', ()=>{ aiConfig.shuffle = !!aiShuffleToggle.checked; saveAllDeferred(); });
+    aiJitterToggle.addEventListener('change', ()=>{ aiConfig.jitter  = !!aiJitterToggle.checked; saveAllDeferred(); });
+    aiFairToggle.addEventListener('change', ()=>{ aiConfig.fair     = !!aiFairToggle.checked; saveAllDeferred(); });
+    aiTempRange.addEventListener('input', ()=>{
+      aiConfig.temperature = Number(aiTempRange.value);
+      aiTempLabel.textContent = aiTempRange.value;
+      saveAllDeferred();
+    });
+    aiJitterRange.addEventListener('input', ()=>{
+      aiConfig.jitterAmt = Number(aiJitterRange.value);
+      aiJitterLabel.textContent = Number(aiJitterRange.value).toFixed(2);
+      saveAllDeferred();
+    });
+    aiFairKRange.addEventListener('input', ()=>{
+      aiConfig.fairK = Number(aiFairKRange.value);
+      aiFairKLabel.textContent = Number(aiFairKRange.value).toFixed(2);
+      saveAllDeferred();
+    });
+
+    function toggleModal(el, show){
+      el.style.display = show ? 'flex':'none';
+      el.setAttribute('aria-hidden', show ? 'false':'true');
+    }
+
+    function ensureStateDefaults(){
+      allNames.forEach(n=>{
+        if(!(n in weights)) weights[n]=1;
+        if(!(n in stats)) stats[n]=0;
+      });
+      if(!Array.isArray(availableNames)){ availableNames = []; }
+      availableNames = availableNames.filter(n=>allNames.includes(n));
+
+      if(autoResetOnEnter && allNames.length>0){
+        availableNames = [...allNames];
+        roundOrder = [];
+      }
+
+      if(allNames.length === 0){
+        statusEl.textContent = '未选择分组，请在“妙控中心 - 自定义范围”中加载班级名单。';
+      }else{
+        statusEl.textContent = '已自动载入上次分组，可直接开始点名。';
+      }
+    }
+    function initUIFromPrefs(){
+      applyTheme(currentTheme);
+    }
+
+    window.addEventListener('load', ()=>{
+      loadAll();
+      ensureStateDefaults();
+      initUIFromPrefs();
+      recomputeStatsFromHistory(); 
+      populateSelects();
+      updateStatus();
+      renderRoundWinners();
+      document.title = 'Name Dance 6 AI Ultimate';
+      countDisplayEl.textContent = String(countValue);
+      setCountWrapVisible(true);
+    });
+
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){
+        if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+        rolling = false;
+        stopBtn.style.display='none';
+        startBtn.style.display='inline-block';
+        stopFXLoop();
+        countWrap.style.display = 'flex';
+        if(availableNames.length < allNames.length) resetBtn.style.display = 'inline-block';
+      }
+    }, { passive: true });
+
+    [advModal, statsModal, historyModal, rangeModal, aiModal].forEach(m=>{
+      m.addEventListener('click', (e)=>{ if(e.target===m) toggleModal(m,false); });
+    });
+
+    console.log('Name Dance 6 AI Ultimate已就绪');
+  </script>
+</body>
+</html>

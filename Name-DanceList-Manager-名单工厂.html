@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name DanceList Manager - 名单工厂</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6fff9 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 自定义滚动条 */
+        .scroller::-webkit-scrollbar { width: 6px; height: 6px; }
+        .scroller::-webkit-scrollbar-track { background: transparent; }
+        .scroller::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.1); border-radius: 99px; }
+        .scroller:hover::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.2); }
+
+        .chip {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .chip:active { transform: scale(0.95); }
+        
+        /* 选中状态动画 */
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .item-pop { animation: popIn 0.2s ease forwards; }
+    </style>
+</head>
+<body class="text-slate-700 flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30">
+                M
+            </div>
+            <div>
+                <h1 class="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">
+                    Name Dance 名单工厂
+                </h1>
+                <p class="text-xs text-slate-400">适配 Name Dance 6 Ultimate JS 格式</p>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <a href="javascript:void(0)" onclick="window.location.reload()" class="text-sm text-slate-500 hover:text-blue-600 transition font-medium">重置页面</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-hidden p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6 max-w-[1600px] mx-auto w-full">
+        
+        <!-- 左侧：导入与源数据区 -->
+        <section class="md:col-span-4 flex flex-col bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-white/50 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <h2 class="font-bold text-slate-800 flex items-center gap-2">
+                    <span class="text-xl">📂</span> 数据源导入
+                </h2>
+                <label class="cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1.5 rounded-lg text-sm font-bold transition">
+                    导入文件
+                    <input type="file" id="fileInput" class="hidden" accept=".js,.json,.csv,.txt" />
+                </label>
+            </div>
+            
+            <div class="p-4 flex-1 overflow-y-auto scroller flex flex-col gap-4">
+                <!-- 文本粘贴区 -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">直接粘贴文本 (智能识别)</label>
+                        <button id="parseTextBtn" class="text-xs text-blue-500 font-bold hover:underline">解析文本</button>
+                    </div>
+                    <textarea id="rawInput" class="w-full h-32 p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none resize-none placeholder:text-slate-300" placeholder="支持格式：
+1. 纯名字列表（换行或逗号分隔）
+2. JS格式代码 (window.CLASS_STUDENTS = [...])
+3. JSON数组 (['张三', '李四'])"></textarea>
+                </div>
+
+                <!-- 已加载的班级列表 -->
+                <div class="flex-1 flex flex-col min-h-0">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">已加载的源列表</h3>
+                    <div id="sourceListContainer" class="flex-1 overflow-y-auto scroller space-y-2 pr-1">
+                        <div class="text-center py-8 text-slate-300 text-sm border-2 border-dashed border-slate-100 rounded-xl">
+                            暂无数据，请导入文件或粘贴文本
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 中间：选择与操作区 -->
+        <section class="md:col-span-5 flex flex-col bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-white/50 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="font-bold text-slate-800 flex items-center gap-2">
+                    <span class="text-xl">👥</span> 人员挑选
+                </h2>
+                <div class="flex gap-2 text-xs font-bold">
+                    <button id="selectAllBtn" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition">全选</button>
+                    <button id="selectNoneBtn" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition">清空</button>
+                </div>
+            </div>
+
+            <!-- 搜索栏 -->
+            <div class="px-4 py-2 border-b border-slate-50">
+                <input type="text" id="filterInput" placeholder="🔍 搜索姓名..." class="w-full bg-transparent text-sm font-medium focus:outline-none py-2 text-slate-600 placeholder:text-slate-300">
+            </div>
+
+            <div id="candidateArea" class="p-4 flex-1 overflow-y-auto scroller content-start">
+                <div class="text-center py-20 text-slate-300 text-sm">
+                    👈 请先在左侧选择一个源列表
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <span class="text-sm text-slate-500 font-medium">已选中 <span id="selectedCount" class="text-blue-600 font-bold">0</span> 人</span>
+                <button id="addToResultBtn" class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 py-2 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center gap-2">
+                    添加至新名单 ➜
+                </button>
+            </div>
+        </section>
+
+        <!-- 右侧：结果与导出区 -->
+        <section class="md:col-span-3 flex flex-col bg-gradient-to-b from-slate-800 to-slate-900 text-slate-300 rounded-2xl shadow-2xl shadow-slate-900/20 overflow-hidden">
+            <div class="p-4 border-b border-slate-700/50 flex flex-col gap-3">
+                <h2 class="font-bold text-white flex items-center gap-2">
+                    <span class="text-xl">💾</span> 新名单预览
+                </h2>
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">班级/分组名称 (Class Name)</label>
+                    <input type="text" id="exportName" value="新分组" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-cyan-400 focus:outline-none font-bold">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">手动添加名字</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="manualAddInput" placeholder="输入名字后回车" class="flex-1 bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-cyan-400 focus:outline-none">
+                        <button id="manualAddBtn" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-3 rounded-lg transition">添加</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto scroller p-4">
+                <ul id="resultList" class="space-y-1 text-sm font-mono">
+                    <li class="text-slate-500 text-xs italic text-center mt-10">列表为空<br>请从中间添加人员或手动输入</li>
+                </ul>
+            </div>
+
+            <div class="p-4 border-t border-slate-700/50 bg-slate-800/50">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-bold">共 <span id="totalCount" class="text-white">0</span> 人</span>
+                    <button id="clearResultBtn" class="text-xs text-red-400 hover:text-red-300 font-bold">清空</button>
+                </div>
+                <button id="downloadBtn" class="w-full bg-white text-slate-900 hover:bg-blue-50 font-black py-3 rounded-xl shadow-lg transition flex justify-center items-center gap-2 group">
+                    <span>下载 .js 文件</span>
+                    <svg class="w-4 h-4 group-hover:translate-y-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </button>
+                <div class="mt-2 text-[10px] text-center text-slate-500">
+                    生成的 JS 文件可直接被点名程序读取
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JS Logic -->
+    <script>
+        // 状态管理
+        const state = {
+            sources: [], // { id, name, students: [] }
+            currentSourceId: null,
+            selectedInView: new Set(), // 当前视图中被勾选的
+            resultStudents: new Set(), // 最终结果集
+            filterText: ''
+        };
+
+        // DOM 元素
+        const els = {
+            fileInput: document.getElementById('fileInput'),
+            rawInput: document.getElementById('rawInput'),
+            parseTextBtn: document.getElementById('parseTextBtn'),
+            sourceListContainer: document.getElementById('sourceListContainer'),
+            candidateArea: document.getElementById('candidateArea'),
+            filterInput: document.getElementById('filterInput'),
+            selectAllBtn: document.getElementById('selectAllBtn'),
+            selectNoneBtn: document.getElementById('selectNoneBtn'),
+            selectedCount: document.getElementById('selectedCount'),
+            addToResultBtn: document.getElementById('addToResultBtn'),
+            resultList: document.getElementById('resultList'),
+            totalCount: document.getElementById('totalCount'),
+            clearResultBtn: document.getElementById('clearResultBtn'),
+            exportName: document.getElementById('exportName'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            manualAddInput: document.getElementById('manualAddInput'),
+            manualAddBtn: document.getElementById('manualAddBtn')
+        };
+
+        const uuid = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+
+        const dedupeList = (list) => Array.from(new Set(list.map(s => String(s).trim()).filter(Boolean)));
+
+        const parseContent = (content, fileName = '导入数据') => {
+            let students = [];
+            let name = fileName.replace(/\.(js|json|csv|txt)$/i, '');
+
+            const trimmed = content.trim();
+            if (!trimmed) return { name, students };
+
+            try {
+                // 1. JSON 格式
+                if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                    const json = JSON.parse(trimmed);
+                    if (Array.isArray(json)) students = json;
+                    else if (Array.isArray(json.students)) {
+                        students = json.students;
+                        if (json.name) name = json.name;
+                    }
+                }
+                // 2. JS 格式 window.CLASS_STUDENTS
+                else if (trimmed.includes('CLASS_STUDENTS')) {
+                    const nameMatch = trimmed.match(/CLASS_NAME\s*=\s*['"](.+?)['"]/);
+                    if (nameMatch) name = nameMatch[1];
+
+                    const listMatch = trimmed.match(/CLASS_STUDENTS\s*=\s*(\[[\s\S]*?\])/);
+                    if (listMatch) {
+                        const arr = new Function(`return ${listMatch[1]}`)();
+                        if (Array.isArray(arr)) students = arr;
+                    }
+                }
+                // 3. 普通文本 / CSV
+                else {
+                    students = trimmed
+                        .replace(/，/g, ',')
+                        .split(/[\n,]+/)
+                        .map(s => s.replace(/^['"]|['"]$/g, '').trim())
+                        .filter(Boolean);
+                }
+            } catch (err) {
+                console.error('解析失败:', err);
+                students = [];
+            }
+
+            students = dedupeList(students);
+            return { name, students };
+        };
+
+        const renderSourceList = () => {
+            if (state.sources.length === 0) {
+                els.sourceListContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-300 text-sm border-2 border-dashed border-slate-100 rounded-xl">
+                        暂无数据，请导入文件或粘贴文本
+                    </div>`;
+                return;
+            }
+
+            els.sourceListContainer.innerHTML = '';
+            state.sources.forEach(src => {
+                const btn = document.createElement('button');
+                const active = src.id === state.currentSourceId;
+                btn.className = `
+                    w-full text-left px-3 py-2 rounded-xl border chip
+                    ${active ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-100 bg-slate-50 hover:border-blue-200 hover:bg-blue-50/50'}
+                `;
+                btn.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="font-bold truncate">${src.name}</div>
+                        <span class="text-xs ${active ? 'text-blue-600' : 'text-slate-400'}">${src.students.length}人</span>
+                    </div>
+                `;
+                btn.onclick = () => {
+                    state.currentSourceId = src.id;
+                    state.selectedInView.clear();
+                    renderCandidates();
+                    updateSelectedCount();
+                };
+                els.sourceListContainer.appendChild(btn);
+            });
+        };
+
+        const getCurrentSource = () => state.sources.find(s => s.id === state.currentSourceId) || null;
+
+        const getFilteredCandidates = () => {
+            const src = getCurrentSource();
+            if (!src) return [];
+            const kw = state.filterText.trim();
+            return src.students.filter(n => !kw || n.includes(kw));
+        };
+
+        const renderCandidates = () => {
+            const src = getCurrentSource();
+            if (!src) {
+                els.candidateArea.innerHTML = '<div class="text-center py-20 text-slate-300 text-sm">👈 请先在左侧选择一个源列表</div>';
+                return;
+            }
+
+            const filtered = getFilteredCandidates();
+            if (filtered.length === 0) {
+                els.candidateArea.innerHTML = '<div class="text-center py-10 text-slate-300 text-sm">未找到匹配的姓名</div>';
+                updateSelectedCount();
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+            filtered.forEach(name => {
+                const checked = state.selectedInView.has(name);
+                const chip = document.createElement('div');
+                chip.className = `
+                    chip item-pop flex items-center justify-between px-3 py-2 mb-2 rounded-xl border cursor-pointer
+                    ${checked ? 'bg-blue-50 border-blue-400 text-blue-700 shadow-sm' : 'bg-slate-50 border-slate-100 hover:border-blue-200 hover:bg-blue-50/50'}
+                `;
+                chip.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded border ${checked ? 'bg-blue-500 border-blue-500' : 'border-slate-300 bg-white'} flex items-center justify-center text-white text-[10px]">
+                            ${checked ? '✓' : ''}
+                        </div>
+                        <span class="font-bold">${name}</span>
+                    </div>
+                `;
+                chip.onclick = () => {
+                    if (state.selectedInView.has(name)) state.selectedInView.delete(name);
+                    else state.selectedInView.add(name);
+                    updateSelectedCount();
+                    renderCandidates();
+                };
+                frag.appendChild(chip);
+            });
+
+            els.candidateArea.innerHTML = '';
+            els.candidateArea.appendChild(frag);
+            updateSelectedCount();
+        };
+
+        const renderResultList = () => {
+            const list = Array.from(state.resultStudents).sort((a, b) => a.localeCompare(b, 'zh'));
+            els.totalCount.textContent = list.length.toString();
+
+            if (list.length === 0) {
+                els.resultList.innerHTML = '<li class="text-slate-500 text-xs italic text-center mt-10">列表为空<br>请从中间添加人员或手动输入</li>';
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+            list.forEach(name => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between bg-slate-800/40 border border-slate-700/60 rounded-lg px-3 py-2 text-slate-200';
+                li.innerHTML = `
+                    <span class="truncate">${name}</span>
+                    <button class="text-slate-500 hover:text-red-400 transition" aria-label="删除">✕</button>
+                `;
+                li.querySelector('button').onclick = () => {
+                    state.resultStudents.delete(name);
+                    renderResultList();
+                };
+                frag.appendChild(li);
+            });
+            els.resultList.innerHTML = '';
+            els.resultList.appendChild(frag);
+        };
+
+        const updateSelectedCount = () => {
+            // 清理已不在当前源中的选中项
+            const src = getCurrentSource();
+            if (src) {
+                state.selectedInView.forEach(n => { if (!src.students.includes(n)) state.selectedInView.delete(n); });
+            } else {
+                state.selectedInView.clear();
+            }
+            els.selectedCount.textContent = state.selectedInView.size.toString();
+        };
+
+        const handleAddToResult = () => {
+            if (state.selectedInView.size === 0) {
+                alert('请先选择人员');
+                return;
+            }
+            state.selectedInView.forEach(n => state.resultStudents.add(n));
+            state.selectedInView.clear();
+            updateSelectedCount();
+            renderCandidates();
+            renderResultList();
+        };
+
+        const handleManualAdd = () => {
+            const name = els.manualAddInput.value.trim();
+            if (!name) return;
+            if (state.resultStudents.has(name)) {
+                alert('该名字已在结果列表中');
+                return;
+            }
+            state.resultStudents.add(name);
+            els.manualAddInput.value = '';
+            renderResultList();
+        };
+
+        const handleDownload = () => {
+            if (state.resultStudents.size === 0) {
+                alert('名单为空，无法导出');
+                return;
+            }
+            const className = els.exportName.value.trim() || '新分组';
+            const arr = Array.from(state.resultStudents).sort((a, b) => a.localeCompare(b, 'zh'));
+            const content = `window.CLASS_NAME = "${className}";\nwindow.CLASS_STUDENTS = ${JSON.stringify(arr, null, 2)};\n`;
+            downloadFile(`${className}.js`, content, 'text/javascript');
+        };
+
+        const downloadFile = (filename, content, mime) => {
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        const addSourceFromParsed = ({ name, students }) => {
+            if (!students || students.length === 0) {
+                alert('未识别到有效的名字');
+                return;
+            }
+            const src = {
+                id: uuid(),
+                name: name || '未命名列表',
+                students: dedupeList(students).sort((a, b) => a.localeCompare(b, 'zh'))
+            };
+            state.sources.push(src);
+            state.currentSourceId = src.id;
+            state.selectedInView.clear();
+            renderSourceList();
+            renderCandidates();
+        };
+
+        // 事件绑定
+        els.fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const parsed = parseContent(ev.target.result, file.name);
+                addSourceFromParsed(parsed);
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        els.parseTextBtn.addEventListener('click', () => {
+            const txt = els.rawInput.value;
+            const parsed = parseContent(txt, '粘贴内容');
+            addSourceFromParsed(parsed);
+            els.rawInput.value = '';
+        });
+
+        els.filterInput.addEventListener('input', (e) => {
+            state.filterText = e.target.value;
+            renderCandidates();
+        });
+
+        els.selectAllBtn.addEventListener('click', () => {
+            getFilteredCandidates().forEach(n => state.selectedInView.add(n));
+            updateSelectedCount();
+            renderCandidates();
+        });
+
+        els.selectNoneBtn.addEventListener('click', () => {
+            state.selectedInView.clear();
+            updateSelectedCount();
+            renderCandidates();
+        });
+
+        els.addToResultBtn.addEventListener('click', handleAddToResult);
+
+        els.clearResultBtn.addEventListener('click', () => {
+            if (state.resultStudents.size === 0) return;
+            if (confirm('确定清空结果名单吗？')) {
+                state.resultStudents.clear();
+                renderResultList();
+            }
+        });
+
+        els.manualAddBtn.addEventListener('click', handleManualAdd);
+        els.manualAddInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleManualAdd();
+        });
+
+        els.downloadBtn.addEventListener('click', handleDownload);
+
+        // 初始化
+        renderSourceList();
+        renderResultList();
+    </script>
+</body>
+</html>
